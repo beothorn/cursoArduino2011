@@ -12,12 +12,12 @@
 #define WAIT_FOR_GAME_BEGIN 500
 #define LEFT 1
 #define RIGHT 0
-#define STARTING_LED 6
 #define STARTING_SPEED 400
 #define ACCELERATION 100
 #define MINIMUN_SPEED 40
 #define BUTTON_PRESS_INTERVAL 100
 #define BUTTON_REST_INTERVAL -30
+#define BLINKING_TIME 5
 
 
 #define TRUE 1
@@ -30,18 +30,34 @@ int ballDirection = LEFT;
 long button1PressedStateTime = 0;
 long button2PressedStateTime = 0;
 
-void setAllLedsTo(int stateHIGGorLOW){
-  for(int i=FIRST_LED_PORT;i<=LAST_LED_PORT;i++){;
+void setLedIntervalTo(int beginLed,int endLed,int stateHIGGorLOW){
+  for(int i=beginLed;i<=endLed;i++){;
     digitalWrite(i,stateHIGGorLOW);
   }
+}
+
+void setAllLedsTo(int stateHIGGorLOW){
+  setLedIntervalTo(FIRST_LED_PORT,LAST_LED_PORT,stateHIGGorLOW);
 }
 
 void clearLeds(){
   setAllLedsTo(LOW);
 }
 
+int halfLedIndex(){
+  return (LAST_LED_PORT+FIRST_LED_PORT)/2;
+}
+
 void lightOnLeds(){
   setAllLedsTo(HIGH);
+}
+
+void lightOnFirstHalfLeds(){
+  setLedIntervalTo(FIRST_LED_PORT,halfLedIndex(),HIGH);
+}
+
+void lightOnSecondHalfLeds(){
+  setLedIntervalTo(halfLedIndex(),LAST_LED_PORT,HIGH);
 }
 
 void displayBall(){
@@ -59,28 +75,46 @@ void moveBall(){
 void resetValues(){
   randomSeed(analogRead(RANDOM_SOURCE_PORT));
   isReadingFromDial = FALSE;
-  ballPosition = STARTING_LED;
+  ballPosition = halfLedIndex();
   ballLedSpeed = STARTING_SPEED;
   if(random()%2)
     ballDirection = LEFT;
   else
     ballDirection = RIGHT;
-    
+  button1PressedStateTime = 0;
+  button2PressedStateTime = 0;  
   displayBall();
   delay(WAIT_FOR_GAME_BEGIN);
 }
 
-void blinkAll(int times){
-  for(int i=0;i<times;i++){
+void blinkFirstHalf(){
+  for(int i=0;i<BLINKING_TIME;i++){
     clearLeds();
     delay(200);
-    lightOnLeds();
+    lightOnFirstHalfLeds();
     delay(200);
   }
 }
 
+void blinkSecondHalf(){
+  for(int i=0;i<BLINKING_TIME;i++){
+    clearLeds();
+    delay(200);
+    lightOnSecondHalfLeds();
+    delay(200);
+  }
+}
+
+void blinkWinner(){
+  if(ballPosition==FIRST_LED_PORT){
+    blinkSecondHalf();
+  }else{
+    blinkFirstHalf();
+  }
+}
+
 void gameOver(){
-  blinkAll(3);
+  blinkWinner();
   resetValues();
 }
 
