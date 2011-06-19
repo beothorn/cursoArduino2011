@@ -8,6 +8,8 @@
 #define RIGHT 0
 #define ACCELERATION 100
 #define MINIMUN_SPEED 40
+#define BUTTON_PRESS_INTERVAL 100
+#define BUTTON_REST_INTERVAL -30
 #define TRUE 1
 #define FALSE 0
 
@@ -15,6 +17,8 @@ int isReadingFromDial = FALSE;
 int ballPosition = 0;
 int ballLedSpeed = 0;
 int ballDirection = LEFT;
+long button1PressedStateTime = 0;
+long button2PressedStateTime = 0;
 
 void setAllLedsTo(int stateHIGGorLOW){
   for(int i=FIRST_LED_PORT;i<=LAST_LED_PORT;i++){;
@@ -67,11 +71,26 @@ void giveAChance(){
   delay(ballLedSpeed);
 }
 
+int isButton1Pressed(){
+  return button1PressedStateTime > 0;
+}
+
+int isButton2Pressed(){
+  return button2PressedStateTime > 0;
+}
+
+int isButtonPressed(int button){
+  if(button == BUTTON1_PORT){
+    return isButton1Pressed();
+  }
+  return isButton2Pressed();
+}
+
 void testBallForBorderConditionsAndTakeAction(int positionToTest,int button,int newDirectionIfPressed){
   if(ballPosition == positionToTest){
     displayBall();
     giveAChance();
-    if(digitalRead(button)){
+    if(isButtonPressed(button)){
       ballDirection = newDirectionIfPressed;
       ballLedSpeed -= ACCELERATION;
       if(ballLedSpeed<MINIMUN_SPEED)
@@ -87,6 +106,45 @@ void testForCollisionWithBorders(){
   testBallForBorderConditionsAndTakeAction(LAST_LED_PORT,BUTTON2_PORT,LEFT);
 }
 
+void readButtons(){
+  if(digitalRead(BUTTON1_PORT)){
+    if(button1PressedStateTime==0){
+      button1PressedStateTime = BUTTON_PRESS_INTERVAL;
+    }
+  }
+  if(digitalRead(BUTTON2_PORT)){
+    if(button2PressedStateTime==0){
+      button2PressedStateTime = BUTTON_PRESS_INTERVAL;
+    }
+  }
+  
+  int b1ShouldRest = FALSE;
+  if(button1PressedStateTime > 0){
+    button1PressedStateTime--;
+    b1ShouldRest = TRUE;
+  }
+  
+  int b2ShouldRest = FALSE;
+  if(button2PressedStateTime > 0){
+    button2PressedStateTime--;
+    b2ShouldRest = TRUE;
+  }
+  
+  if(button1PressedStateTime == 0 && b1ShouldRest){
+    b1ShouldRest = FALSE;
+    button1PressedStateTime = BUTTON_REST_INTERVAL;
+  } 
+  if(button2PressedStateTime == 0 && b2ShouldRest){
+    b2ShouldRest = FALSE;
+    button2PressedStateTime = BUTTON_REST_INTERVAL;
+  }
+  
+  if(button1PressedStateTime < 0)
+    button1PressedStateTime++;
+  if(button2PressedStateTime < 0)
+    button2PressedStateTime++;
+}
+
 void setup()
 {
   for(int i=FIRST_LED_PORT;i<=LAST_LED_PORT;i++){
@@ -99,6 +157,7 @@ void setup()
 
 void loop()
 {
+  readButtons();
   moveBall();
   displayBall();
   testForCollisionWithBorders();
