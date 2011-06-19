@@ -1,15 +1,25 @@
+//--Board constants
+
 #define FIRST_LED_PORT 2
 #define LAST_LED_PORT 11
 #define DIAL_PORT 0
 #define LIGHT_SENSOR_PORT 1
 #define BUTTON1_PORT 12
 #define BUTTON2_PORT 13
+#define RANDOM_SOURCE_PORT 4
+
+//--Game constants
+#define WAIT_FOR_GAME_BEGIN 500
 #define LEFT 1
 #define RIGHT 0
+#define STARTING_LED 6
+#define STARTING_SPEED 400
 #define ACCELERATION 100
 #define MINIMUN_SPEED 40
 #define BUTTON_PRESS_INTERVAL 100
 #define BUTTON_REST_INTERVAL -30
+
+
 #define TRUE 1
 #define FALSE 0
 
@@ -47,10 +57,17 @@ void moveBall(){
 }
 
 void resetValues(){
-  isReadingFromDial = 0;
-  ballPosition = 8;//(LAST_LED_PORT-FIRST_LED_PORT)/2;
-  ballLedSpeed = 400;
-  ballDirection = LEFT;
+  randomSeed(analogRead(RANDOM_SOURCE_PORT));
+  isReadingFromDial = FALSE;
+  ballPosition = STARTING_LED;
+  ballLedSpeed = STARTING_SPEED;
+  if(random()%2)
+    ballDirection = LEFT;
+  else
+    ballDirection = RIGHT;
+    
+  displayBall();
+  delay(WAIT_FOR_GAME_BEGIN);
 }
 
 void blinkAll(int times){
