@@ -118,7 +118,7 @@ public:
 #define LED_COUNT 4
 
 Led gameLeds[LED_COUNT] = { Led(5), Led(6), Led(9), Led(10) };
-Button gameButtons[LED_COUNT] = { Button(7), Button(8), Button(11), Button(12)};
+Button gameButtons[LED_COUNT] = { Button(7), Button(8), Button(13), Button(12)};
 int buttonCount = LED_COUNT;
 
 Genius game(gameLeds, gameButtons, buttonCount);
