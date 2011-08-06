@@ -1,0 +1,23 @@
+#include "common.h"
+#include "led.h"
+#include "button.h"
+#include "dial.h"
+#include <Servo.h>
+#include <CapSense.h>
+#include "buzzer.h"
+
+CapSense btn1 = CapSense(8, 9);
+Led led = Led(4);
+
+void setup(){
+  Serial.begin(9600);
+}
+
+void loop(){
+
+  long freq = btn1.capSense(10);
+  Serial.println(freq);
+  tone(10, freq,100);  
+  delay(100);
+  
+}
