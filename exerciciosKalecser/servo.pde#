@@ -1,0 +1,16 @@
+#include "common.h"
+#include "led.h"
+#include "button.h"
+#include "dial.h"
+#include <Servo.h>
+
+Dial dial = Dial(2);
+Servo servo;
+
+void setup(){
+ servo.attach(9);
+}
+
+void loop(){
+ servo.write(map(dial.readByte(), 0, 255, 0, 180));
+}
