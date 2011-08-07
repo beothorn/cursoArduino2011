@@ -1,0 +1,46 @@
+#include "common.h"
+#include "led.h"
+#include "button.h"
+#include "dial.h"
+#include <Servo.h>
+#include <Wire.h>
+#include <Nunchuck.h>
+
+Dial dial = Dial(3);
+Servo servo1;
+Servo servo2;
+
+Nunchuck nunchuck;
+
+void setup(){
+  Serial.begin(9600);
+  nunchuck.begin();
+}
+
+void loop(){
+nunchuck.update();
+
+int x = nunchuck.readAccelX();
+int angleX = nunchuck.readAngleX();
+int y = nunchuck.readAccelY();
+int angleY = nunchuck.readAngleY();
+int z = nunchuck.readAccelZ();
+int angleZ = nunchuck.readAngleZ();
+nunchuck.readAccelX();
+Serial.print( x );
+Serial.print( " (" );
+Serial.print( angleX );
+Serial.print( "), " );
+
+Serial.print( y );
+Serial.print( " (" );
+Serial.print( angleY );
+Serial.print( "), " );
+
+Serial.print( z );
+Serial.print( " (" );
+Serial.print( angleY );
+Serial.println( ") " );
+delay(200); 
+
+}
