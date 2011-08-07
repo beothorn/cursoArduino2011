@@ -4,13 +4,16 @@
 #include "dial.h"
 #include <Servo.h>
 
-Dial dial = Dial(2);
-Servo servo;
+Dial dial = Dial(3);
+Servo servo1;
+Servo servo2;
 
 void setup(){
- servo.attach(9);
+ servo1.attach(9);
+ servo2.attach(10);
 }
 
 void loop(){
- servo.write(map(dial.readByte(), 0, 255, 0, 180));
+ servo1.write(map(dial.readByte(), 0, 255, 0, 180));
+ servo2.write(map(dial.readByte(), 0, 255, 0, 180));
 }

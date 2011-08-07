@@ -1,3 +1,4 @@
+#include "base.h"
 #include <IRremote.h>
 #include <IRremoteInt.h>
 
@@ -6,21 +7,25 @@ class IrReceiver{
 public:
 
   IrReceiver(int aPin){
-    pin = aPin;
-    Serial.begin(9600);
+    receiver = new IRrecv(aPin);
+    receiver->enableIRIn();
   }
 
-  long receive(){
-    decode_results results;
-    IRrecv rec = IRrecv(pin);
-    rec.enableIRIn();
+  virtual ~IrReceiver(){
+    delete receiver;
+  }
 
-    while (!rec.decode(&results)){
+  long waitForCommand(){
+    decode_results results;
+
+    while (!receiver->decode(&results)){
     }
+    receiver->resume();
     return results.value;
   }
 
+
 private:
-int pin;
+IRrecv * receiver;
 
 };
