@@ -215,7 +215,7 @@ public:
 		if(isOutOfScreenX(x)) {
 			return;
 		}
-		GLCD.FillRect(x,y, ENTITY_WIDTH, ENTITY_HEIGHT );
+		Rock::draw();
 		GLCD.DrawHLine(x+1, y + 1,ENTITY_WIDTH - 2, WHITE );
 		GLCD.DrawVLine(x+3, y + 1, 2, WHITE );
 		GLCD.DrawVLine(x+5, y + 1, 4, WHITE );
