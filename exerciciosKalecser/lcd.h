@@ -206,14 +206,10 @@ private:
 	
 };
 
-class Fuel : public Entity {
+class Fuel : public Rock {
 	
 public:
 	
-	
-	Fuel(){
-		initialize();
-	}
 	
 	virtual void draw() {
 		if(isOutOfScreenX(x)) {
@@ -223,26 +219,6 @@ public:
 		GLCD.DrawHLine(x+1, y + 1,ENTITY_WIDTH - 2, WHITE );
 		GLCD.DrawVLine(x+3, y + 1, 2, WHITE );
 		GLCD.DrawVLine(x+5, y + 1, 4, WHITE );
-	}
-	
-	virtual void tick(){
-		if(x==0) {
-			initialize();
-		}
-		translate(-1,0);
-	}
-	
-	void setX(int newX) {	
-		if (newX < 0) {
-			return;
-		}
-		x = newX;
-	}
-	
-private:
-	
-	void initialize() {
-		setPosition(121+ random(0,200),random(0,HEIGHT - 1 - ENTITY_HEIGHT));
 	}
 };
 
