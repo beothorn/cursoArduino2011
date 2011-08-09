@@ -8,19 +8,18 @@
 #include "lcd.h"
 #include "base.h"
 
+#define ENTTITY_COUNT 10
 
 Nunchuck nunchuck;
 
 Plane * plane;
-Entity* entities[10]; 
+Entity* entities[ENTTITY_COUNT]; 
 
 int planeSpeed;
 
 void setup(){
   Serial.begin(9600);
   GLCD.Init(NON_INVERTED);
-  plane = new Plane();
-  plane->center();
   entities[0] = new Rock();
   entities[1] = new Rock();
   entities[2] = new Rock();
@@ -32,6 +31,9 @@ void setup(){
   entities[8] = new Fuel();
   entities[9] = new Fuel();
   planeSpeed = 25;
+
+  plane = new Plane();
+  plane->center();
   
 }
 
@@ -46,7 +48,7 @@ void loop(){
 	GLCD.ClearScreen();
 	plane->tick();
 	plane->draw();
-	for(int i=0;i<10;++i) {
+	for(int i=0;i<ENTTITY_COUNT; ++i) {
 		entities[i]->draw();
 		entities[i]->tick();
 		if( i < 8 ) {

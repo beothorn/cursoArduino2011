@@ -66,9 +66,11 @@ public:
 	}
 };
 
+#include "Missile.h"
 
 class Plane : public Entity {
 public:
+	Missile * missile;
 	Manche* manche;
 	Dashboard* dashboard;
 	int fuel;
@@ -79,6 +81,7 @@ public:
 		manche->begin();
 		dashboard = new Dashboard();
 		dashboard->attach(2,3);
+		missile = new Missile();
 	}
 	
 	void center() {
@@ -133,8 +136,10 @@ public:
 		if (fuel < 80){
 			tone(12, 440*3, 100);
 		}
+
 		
-		
+		missile->fire(x+ENTITY_WIDTH, y+ENTITY_HEIGHT/2);
+	        missile->tick();
 	}
 	
 	void setdashboardSpeed(int speed){
