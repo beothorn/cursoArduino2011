@@ -2,6 +2,7 @@
 void setup()
 {
   pinMode(LED,OUTPUT);
+  Serial.begin(9600);
 }
 
 void loop()
@@ -10,4 +11,5 @@ void loop()
   delay(500);
   digitalWrite(LED, LOW);
   delay(500);  
+  Serial.println("Howdy");
 }
