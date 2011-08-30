@@ -15,7 +15,6 @@ const int speedAnalogInput = A0;
 const int LED_DISPLAY_STARTING_PORT = 4;
 const int NUMBER_OF_LEDS = 5; // 10;
 
-
 class BlinkLightStrategy : public LightStrategy {
 public:
 	void light(Led * led) {
@@ -34,11 +33,13 @@ public:
 class ForwardSequenceStrategy : public SequenceStrategy {
 public:
 	void iterate(
-		Led leds[], int numberOfLeds, 
+		LedList * leds, 
 		LightStrategy * light, DelayIntervalReader * interval) {
+	
+		int numberOfLeds = leds->size(); 
 		for (int i = 0; i < numberOfLeds; i++) 
 		{
-			Led * led = &leds[i];
+			Led * led = leds->get(i);
 			light->light(led);
 			delay(interval->read());
 		}
@@ -48,11 +49,12 @@ public:
 class BackwardSequenceStrategy : public SequenceStrategy{
 public:
 	void iterate(
-		Led leds[], int numberOfLeds, 
+		LedList * leds, 
 		LightStrategy * light, DelayIntervalReader * interval) {
+		int numberOfLeds = leds->size(); 
 		for (int i = numberOfLeds - 1; i >= 0; i--) 
 		{
-			Led * led = &leds[i];
+			Led * led = leds->get(i);
 			light->light(led);
 			delay(interval->read());
 		}
@@ -60,8 +62,8 @@ public:
 };
 
 
-
-Led leds[NUMBER_OF_LEDS];
+Led ledInstances[NUMBER_OF_LEDS];
+LedList leds;
 Button buttonLight;
 Button buttonSequence;
 DelayIntervalReader interval;
@@ -87,7 +89,9 @@ void setup() {
 void initLeds(){
   for (int i = 0; i< NUMBER_OF_LEDS; i++){
     int port = LED_DISPLAY_STARTING_PORT + i;
-    leds[i].init(port);
+    Led * led = &ledInstances[i];
+    led->init(port);
+    leds.add(led);
   }
 }
 
@@ -103,6 +107,6 @@ void loop() {
 	SequenceStrategy * selectedSequenceBeforeIteration = sequences.getSelected();
 	LightStrategy * selectedLightBeforeIteration = lights.getSelected();
 	selectedSequenceBeforeIteration->iterate(
-		leds, NUMBER_OF_LEDS, selectedLightBeforeIteration, &interval);  
+		&leds, selectedLightBeforeIteration, &interval);  
 }
 
