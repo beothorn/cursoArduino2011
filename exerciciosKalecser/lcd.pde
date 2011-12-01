@@ -56,6 +56,7 @@ void loop(){
 		} else {
 			plane->fuelIfNecessary(entities[i]);
 		}
+		plane->destroyIfHit(entities[i]);
 	}
 	
 	

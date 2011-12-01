@@ -60,9 +60,15 @@ public:
 	virtual void tick() = 0;
 	
 	boolean collides(Entity* entity) {
+		if (isOutOfScreenX(x))
+			return false;
+
 		int dx = x - entity->x;
 		int dy = entity->y - y;
 		return dx > ENTITY_WIDTH * -1  && dx < ENTITY_WIDTH && dy > ENTITY_HEIGHT * -1  && dy < ENTITY_HEIGHT ;
+	}
+
+	virtual void destroy() {
 	}
 };
 
@@ -137,8 +143,9 @@ public:
 			tone(12, 440*3, 100);
 		}
 
-		
-		missile->fire(x+ENTITY_WIDTH, y+ENTITY_HEIGHT/2);
+		if (manche->isFiring())
+			missile->fire(x+ENTITY_WIDTH, y+ENTITY_HEIGHT/2);
+
 	        missile->tick();
 	}
 	
@@ -172,6 +179,9 @@ public:
 		}
 	}
 	
+	void destroyIfHit(Entity * entity) {
+		missile->destroyIfHit(entity);
+	}
 };
 
 class Rock : public Entity {
@@ -203,6 +213,9 @@ public:
 		x = newX;
 	}
 	
+	void destroy() {
+		this->initialize();
+	}
 private:
 	
 	void initialize() {
