@@ -1,5 +1,5 @@
 #include "DelayIntervalReader.h"
-#include <WProgram.h> 
+#include <Arduino.h> 
 
 void DelayIntervalReader::init(int _pin) {
 	this->pin = _pin;

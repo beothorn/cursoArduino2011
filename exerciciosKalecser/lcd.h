@@ -86,7 +86,7 @@ public:
 		manche = new Manche();
 		manche->begin();
 		dashboard = new Dashboard();
-		dashboard->attach(2,3);
+		dashboard->attach(2,11);
 		missile = new Missile();
 	}
 	

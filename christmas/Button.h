@@ -2,7 +2,7 @@
 #define Button_h
 
 
-#include <WProgram.h> 
+#include <Arduino.h> 
 
 class Button {
 public:

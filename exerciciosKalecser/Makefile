@@ -6,4 +6,4 @@ ARDUINO_PORT=/dev/ttyUSB0
 AVRDUDE_CONF=$(ARDUINO_DIR)/hardware/tools/avrdude.conf
 ARDUINO_LIBS = Servo CapSense IRremote Nunchuck Wire twi glcd
 
-include  /usr/share/arduino/custom/Arduino.mk
+include  ../arduino-mk/Arduino.mk

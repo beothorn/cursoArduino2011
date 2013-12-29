@@ -165,6 +165,18 @@ ifndef BOARD_TAG
 BOARD_TAG   = uno
 endif
 
+ifeq ($(BOARD_TAG),mega)
+	VARIANT=mega
+else ifeq ($(BOARD_TAG),mega2560)
+	VARIANT=mega
+else ifeq ($(BOARD_TAG),\#leonardo)
+	VARIANT=leonardo
+else ifeq ($(BOARD_TAG),\#micro)
+	VARIANT=micro
+else
+	VARIANT=standard
+endif
+
 ifndef BOARDS_TXT
 BOARDS_TXT  = $(ARDUINO_DIR)/hardware/arduino/boards.txt
 endif
@@ -281,7 +293,7 @@ LIB_SRC       = $(wildcard $(patsubst %,%/*.cpp,$(SYS_LIBS)))
 LIB_OBJS      = $(patsubst $(ARDUINO_LIB_PATH)/%.cpp,$(OBJDIR)/libs/%.o,$(LIB_SRC))
 
 CPPFLAGS      = -mmcu=$(MCU) -DF_CPU=$(F_CPU) \
-			-I. -I$(ARDUINO_CORE_PATH) \
+			-I. -I$(ARDUINO_CORE_PATH) -I$(ARDUINO_DIR)/hardware/arduino/variants/$(VARIANT) \
 			$(SYS_INCLUDES) -g -Os -w -Wall \
 			-ffunction-sections -fdata-sections
 CFLAGS        = -std=gnu99
@@ -290,7 +302,7 @@ ASFLAGS       = -mmcu=$(MCU) -I. -x assembler-with-cpp
 LDFLAGS       = -mmcu=$(MCU) -lm -Wl,--gc-sections -Os
 
 # Rules for making a CPP file from the main sketch (.cpe)
-PDEHEADER     = \\\#include \"WProgram.h\"
+PDEHEADER     = \\\#include \"Arduino.h\"
 
 # Expand and pick the first port
 ARD_PORT      = $(firstword $(wildcard $(ARDUINO_PORT)))
